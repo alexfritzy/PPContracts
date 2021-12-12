@@ -18,6 +18,10 @@ describe("Pirates Contract", function () {
     Pirates = await ethers.getContractFactory("Pirates");
     [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
     pirates = await Pirates.deploy();
+    Booty = await ethers.getContractFactory("Booty");
+    booty = await Booty.deploy();
+    await pirates.setBooty(booty.address);
+    await booty.setPirates(pirates.address);
   });
 
   describe("Deployment", function () {
@@ -304,12 +308,6 @@ describe("Pirates Contract", function () {
     })
 
     it("Captain (1 for test) and First Mate (2 for tests) should mint/transfer correctly", async function() {
-      //Booty
-      Booty = await ethers.getContractFactory("Booty");
-      booty = await Booty.deploy();
-      await pirates.setBooty(booty.address);
-      await booty.setPirates(pirates.address);
-
       //Mint 1 to Wallet 1
       await pirates.setPublicSaleState(true);
       let overrides = { value: ethers.utils.parseEther("0.06") };

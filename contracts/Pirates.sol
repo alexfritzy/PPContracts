@@ -60,6 +60,7 @@ contract Pirates is ERC721, ERC721Enumerable, Ownable {
         require(isKeyMintActive, "Key minting is not active");
         require(ts + keyIds.length <= MAX_SUPPLY, "Minting would exceed max tokens");
 
+        Booty.updateReward(address(0), msg.sender);
         for (uint256 i = 0; i < keyIds.length; i++) {
             require(Keys.ownerOf(keyIds[i]) == msg.sender, "Cannot redeem key you don't own");
             require(keyUsed[keyIds[i]] == false, "Key has been used");
@@ -94,6 +95,7 @@ contract Pirates is ERC721, ERC721Enumerable, Ownable {
         require(PRICE_PER_TOKEN * numberOfTokens <= msg.value, "Ether value sent is not correct");
 
         allowList[msg.sender] -= numberOfTokens;
+        Booty.updateReward(address(0), msg.sender);
         for (uint256 i = 0; i < numberOfTokens; i++) {
             _safeMint(msg.sender, ts + i);
             if (ts + i < CAPTAIN_CUTOFF) {
@@ -118,6 +120,7 @@ contract Pirates is ERC721, ERC721Enumerable, Ownable {
         require(ts + numberOfTokens <= MAX_SUPPLY, "Purchase would exceed max tokens");
         require(PRICE_PER_TOKEN * numberOfTokens <= msg.value, "Ether value sent is not correct");
 
+        Booty.updateReward(address(0), msg.sender);
         for (uint256 i = 0; i < numberOfTokens; i++) {
             _safeMint(msg.sender, ts + i);
             if (ts + i < CAPTAIN_CUTOFF) {
